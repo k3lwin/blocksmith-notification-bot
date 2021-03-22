@@ -26,19 +26,14 @@ embed = DiscordEmbed(title='Bot online', description=description, color='03b2f8'
 webhook.add_embed(embed)
 webhook.execute()
 
+#Checking for new blocks every 10 seconds
 while True:
 	response = requests.get("https://rvn.bsmith.io/api/poolStats")
 	last_block = json.loads(response.text)['minedBlocks'][0]
 
 	if last_block == prev_block:
-#		print("Last block was on", datetime.fromtimestamp(last_block['timestamp']))
 		continue
 	else:
-#		print("New block!")
-#		print("Number:", last_block['number'])
-#		print("Mined by:", last_block['miner'])
-#		print("Date:", datetime.fromtimestamp(last_block['timestamp']))
-
 		embed = DiscordEmbed(title='New block mined!', color='f0a800')
 		embed.add_embed_field(name="Number", value=last_block['number'], inline=False)
 		embed.add_embed_field(name="Miner", value=last_block['miner'], inline=False)
