@@ -2,6 +2,7 @@
 
 import requests
 import json
+import sys
 
 import time
 from datetime import datetime
@@ -17,7 +18,7 @@ BANNER = os.getenv("BANNER", 'False').lower() in ['true', '1']
 #Save previous block info
 try:
 	response = requests.get("https://rvn.bsmith.io/api/poolStats")
-except:
+except requests.exceptions.RequestException as e:
 	print("Unable to get pool stats:", sys.exc_info()[0])
 
 prev_block = json.loads(response.text)['minedBlocks'][0]
@@ -29,13 +30,16 @@ if BANNER == True:
 	embed = DiscordEmbed(title='Bot online', description=description, color='03b2f8')
 	webhook.add_embed(embed)
 	webhook.execute()
+else:
+	print("Banner off, prev block date", datetime.fromtimestamp(prev_block['timestamp']).strftime("%Y-%m-%d %H:%M:%S"))
 
 #Checking for new blocks every 10 seconds
 while True:
 	try:
 		response = requests.get("https://rvn.bsmith.io/api/poolStats")
-	except ConnectionError as e:
+	except requests.exceptions.RequestException as e:
 		print("Connection error, will try again", e)
+		time.sleep(1)
 
 	last_block = json.loads(response.text)['minedBlocks'][0]
 
