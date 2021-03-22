@@ -46,6 +46,7 @@ while True:
 	if last_block == prev_block:
 		continue
 	else:
+		webhook = DiscordWebhook(url=WEBHOOK)
 		embed = DiscordEmbed(title='New block mined!', color='f0a800')
 		embed.add_embed_field(name="Number", value=last_block['number'], inline=False)
 		embed.add_embed_field(name="Miner", value=last_block['miner'], inline=False)
