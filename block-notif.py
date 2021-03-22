@@ -50,6 +50,7 @@ while True:
 		embed = DiscordEmbed(title='New block mined!', color='f0a800')
 		embed.add_embed_field(name="Number", value=last_block['number'], inline=False)
 		embed.add_embed_field(name="Miner", value=last_block['miner'], inline=False)
+		embed.add_embed_field(name="Effort", value=last_block['effort'], inline=False)
 		embed.add_embed_field(name="Date", value=datetime.fromtimestamp(last_block['timestamp']).strftime("%Y-%m-%d %H:%M:%S"))
 		prev_block = last_block
 
