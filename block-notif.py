@@ -28,7 +28,11 @@ webhook.execute()
 
 #Checking for new blocks every 10 seconds
 while True:
-	response = requests.get("https://rvn.bsmith.io/api/poolStats")
+	try:
+		response = requests.get("https://rvn.bsmith.io/api/poolStats")
+	except ConnectionError as e:
+		print("Connection error, will try again", e)
+	
 	last_block = json.loads(response.text)['minedBlocks'][0]
 
 	if last_block == prev_block:
