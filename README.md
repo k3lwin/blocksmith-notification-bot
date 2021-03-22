@@ -11,3 +11,7 @@ Place your webhook URL in `.env` file like this:
 ```
 DISCORD_WEBHOOK="<webhook URL>"
 ```
+If you want a message with previous block date on every bot startup, in `.env` add:
+```
+BANNER=1
+```

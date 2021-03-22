@@ -12,6 +12,7 @@ from discord_webhook import DiscordWebhook, DiscordEmbed
 
 load_dotenv()
 WEBHOOK = os.getenv('DISCORD_WEBHOOK')
+BANNER = os.getenv("BANNER", 'False').lower() in ['true', '1']
 
 #Save previous block info
 try:
@@ -22,11 +23,12 @@ except:
 prev_block = json.loads(response.text)['minedBlocks'][0]
 
 #Wakeup notification
-webhook = DiscordWebhook(url=WEBHOOK)
-description="Last block mined on " + datetime.fromtimestamp(prev_block['timestamp']).strftime("%Y-%m-%d %H:%M:%S") + "\n" + str(datetime.utcnow() - datetime.fromtimestamp(prev_block['timestamp'])) + " ago"
-embed = DiscordEmbed(title='Bot online', description=description, color='03b2f8')
-webhook.add_embed(embed)
-webhook.execute()
+if BANNER == True:
+	webhook = DiscordWebhook(url=WEBHOOK)
+	description="Last block mined on " + datetime.fromtimestamp(prev_block['timestamp']).strftime("%Y-%m-%d %H:%M:%S") + "\n" + str(datetime.utcnow() - datetime.fromtimestamp(prev_block['timestamp'])) + " ago"
+	embed = DiscordEmbed(title='Bot online', description=description, color='03b2f8')
+	webhook.add_embed(embed)
+	webhook.execute()
 
 #Checking for new blocks every 10 seconds
 while True:
