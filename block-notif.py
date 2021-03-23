@@ -29,7 +29,7 @@ prev_block = json.loads(response.text)['minedBlocks'][0]
 #Wakeup notification
 if BANNER == True:
 	webhook = DiscordWebhook(url=WEBHOOK)
-	description="Last block mined on " + datetime.utcfromtimestamp(prev_block['timestamp']).strftime("%Y-%m-%d %H:%M:%S") + " UTC \n" + str(datetime.utcnow() - datetime.utcfromtimestamp(prev_block['timestamp'])).split(".")[0] + " ago"
+	description="Last block mined on " + datetime.utcfromtimestamp(prev_block['timestamp']).strftime("%Y-%m-%d %H:%M:%S") + " UTC \n" + str(datetime.utcnow() - datetime.utcfromtimestamp(prev_block['timestamp'])).split(".")[0] + " ago" + "\U00002728"
 	embed = DiscordEmbed(title='Bot online', description=description, color='03b2f8')
 	webhook.add_embed(embed)
 	webhook.execute()
@@ -48,11 +48,23 @@ while True:
 	if last_block['number'] == prev_block['number']:
 		continue
 	else:
+		#Set color for effort field
+		if float(last_block['effort']) < 20:
+			effort=last_block['effort'] + "% " + "\U00002728"
+		elif float(last_block['effort']) < 100:
+			effort=last_block['effort'] + "% " + "\U0001F7E2"
+		elif float(last_block['effort']) < 150:
+			effort=last_block['effort'] + "% " + "\U0001F7E7"
+		elif float(last_block['effort']) < 1000:
+			effort=last_block['effort'] + "% " + "\U0001F6D1"
+		else:
+			effort=last_block['effort'] + "%"
+
 		webhook = DiscordWebhook(url=WEBHOOK)
-		embed = DiscordEmbed(title='New block mined!', color='f0a800')
+		embed = DiscordEmbed(title="\U000026CF" + "New block mined!", color='f0a800')
 		embed.add_embed_field(name="Number", value=last_block['number'], inline=False)
 		embed.add_embed_field(name="Miner", value="`" + last_block['miner'] + "`", inline=False)
-		embed.add_embed_field(name="Effort", value=last_block['effort'] + "%", inline=False)
+		embed.add_embed_field(name="Effort", value=effort, inline=False)
 		embed.add_embed_field(name="Date", value=datetime.utcfromtimestamp(last_block['timestamp']).strftime("%Y-%m-%d %H:%M:%S") + " UTC")
 		webhook.add_embed(embed)
 		webhook.execute()
